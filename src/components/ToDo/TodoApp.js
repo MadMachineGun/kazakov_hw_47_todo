@@ -1,8 +1,8 @@
-
 // src/components/ToDo/TodoApp.js
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 
+import './todo-styles.scss';
 import {
     addTodo,
     fetchTodos,
@@ -16,7 +16,7 @@ import Todo from './Todo';
 const TodoApp = () => {
     const dispatch = useDispatch();
 
-    const { loading, error, todoArray } = useSelector((state) => state.todos);
+    const {loading, error, todoArray} = useSelector((state) => state.todos);
 
     const [newTodo, setNewTodo] = useState('');
     const [selectedTodos, setSelectedTodos] = useState([]);
@@ -69,7 +69,7 @@ const TodoApp = () => {
     };
 
     const handleDeleteSelected = () => {
-        // Разделяем тудушки на локальные и полученные из API
+
         const localTodos = selectedTodos.filter((id) => {
             const todo = todoArray.find((t) => t.id === id);
             return todo && todo.local;
@@ -77,12 +77,10 @@ const TodoApp = () => {
 
         const apiTodos = selectedTodos.filter((id) => !localTodos.includes(id));
 
-        // Удаляем локальные тудушки
         localTodos.forEach((id) => {
             dispatch(removeTodo(id));
         });
 
-        // Удаляем полученные из API тудушки
         if (apiTodos.length > 0) {
             dispatch(deleteSelectedTodosLocally(apiTodos));
         }
@@ -104,7 +102,7 @@ const TodoApp = () => {
     return (
         <div>
             <h1>Todo List</h1>
-            <input type="checkbox" checked={selectAll} onChange={handleSelectAll} />
+            <input type="checkbox" checked={selectAll} onChange={handleSelectAll}/>
             <input
                 type="text"
                 value={newTodo}
@@ -136,8 +134,8 @@ const TodoApp = () => {
                 ))}
             </ul>
 
-            <div className='page_numbers' style={{ marginTop: '5px' }}>
-                {Array.from({ length: totalPages }, (_, index) => (
+            <div className='page_numbers' style={{marginTop: '5px'}}>
+                {Array.from({length: totalPages}, (_, index) => (
                     <button key={index + 1} onClick={() => handlePageChange(index + 1)}>
                         {index + 1}
                     </button>
