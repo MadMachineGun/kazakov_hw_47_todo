@@ -16,7 +16,7 @@ body {
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  max-width: 800px;
+  max-width: 830px;
   width: 100%;
   margin-top: 100px;
 
@@ -59,8 +59,8 @@ body {
   }
 
   h1 {
-    margin-bottom: 0.5em;
-  }
+  margin-bottom: 0.5em;
+}
 }
 
 .page_numbers button {
@@ -74,3 +74,9 @@ body {
 
 }
 
+.main > div:nth-child(1){
+  background-color: aliceblue;
+  margin: 1em;
+  padding: 1em;
+  border-radius: 5px;
+}

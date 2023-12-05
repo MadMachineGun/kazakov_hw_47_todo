@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-
 import { removeTodo, selectAllTodos } from '../../store/slices/todoSlice';
+
+import { FaTrash } from 'react-icons/fa';
 
 const Todo = ({ todo, isSelected, toggleSelected }) => {
   const dispatch = useDispatch();
@@ -26,25 +27,29 @@ const Todo = ({ todo, isSelected, toggleSelected }) => {
     dispatch(selectAllTodos());
   };
 
-  console.log('Todo.js - todo:', todo);
-  console.log('Todo.js - isChecked:', isChecked);
-
-  return (
-      <li
-          style={{
-            textDecoration: isChecked ? 'line-through' : 'none',
-            marginBottom: '10px',
-          }}
-      >
-        <input
-            type='checkbox'
-            checked={isChecked}
-            onChange={toggleSelectedTodo}
-        />
-        {todo.title} {/* Используйте todo.title */}
-        <button onClick={handleRemove}>Delete</button>
-      </li>
-  );
+    return (
+        <li
+            style={{
+                textDecoration: isChecked ? 'line-through' : 'none',
+                marginBottom: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+            }}
+        >
+            <div>
+                <input
+                    type='checkbox'
+                    checked={isChecked}
+                    onChange={toggleSelectedTodo}
+                />
+                {todo.title}
+            </div>
+            <button className="delete-btn" onClick={handleRemove}>
+                <FaTrash />
+            </button>
+        </li>
+    );
 };
 
 export default Todo;
