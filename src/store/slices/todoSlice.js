@@ -1,3 +1,4 @@
+// src/components/store/slices/todoSlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -5,7 +6,7 @@ export const fetchTodos = createAsyncThunk(
     'todos/fetchTodos',
     async function (_, { rejectWithValue, dispatch }) {
         try {
-            const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+            const response = await fetch('https://656ecd366529ec1c6236a840.mockapi.io/todo/todos');
             const data = await response.json();
 
             if (!response.ok) {

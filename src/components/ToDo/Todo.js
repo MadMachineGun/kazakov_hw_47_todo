@@ -1,4 +1,5 @@
 // src/components/ToDo/Todo.js
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -25,6 +26,9 @@ const Todo = ({ todo, isSelected, toggleSelected }) => {
     dispatch(selectAllTodos());
   };
 
+  console.log('Todo.js - todo:', todo);
+  console.log('Todo.js - isChecked:', isChecked);
+
   return (
       <li
           style={{
@@ -37,11 +41,10 @@ const Todo = ({ todo, isSelected, toggleSelected }) => {
             checked={isChecked}
             onChange={toggleSelectedTodo}
         />
-        {todo.title || todo.text}
+        {todo.title} {/* Используйте todo.title */}
         <button onClick={handleRemove}>Delete</button>
       </li>
   );
 };
 
 export default Todo;
-
