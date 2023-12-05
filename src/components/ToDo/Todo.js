@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 
 import { removeTodo, selectAllTodos } from '../../store/slices/todoSlice';
 
+
 const Todo = ({ todo, isSelected, toggleSelected }) => {
   const dispatch = useDispatch();
   const [isChecked, setIsChecked] = useState(isSelected);
