@@ -13,7 +13,6 @@ body {
   width: 100%;
   margin-top: 0;
 
-
   button {
     margin-left: 1em;
     background-color: #4caf50;
@@ -77,4 +76,6 @@ body {
 }
 .main > div:nth-child(1){
   width: inherit;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
