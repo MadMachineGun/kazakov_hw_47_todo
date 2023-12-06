@@ -1,26 +1,25 @@
 // src/components/ToDo/TodoApp.js
-import React, {useState, useEffect} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
 
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import './todo-styles.scss';
+
 import {
     addTodo,
     fetchTodos,
-    selectAllTodos,
-    deleteSelectedTodosLocally,
-    removeTodo,
-} from '../../store/slices/todoSlice';
+    selectAll,
+    removeSelectedTodo,
+} from '../../store/slices/TodoSlice';
 
 import Todo from './Todo';
 
 const TodoApp = () => {
     const dispatch = useDispatch();
 
-    const {loading, error, todoArray} = useSelector((state) => state.todos);
+    const { loading, error, todoArray } = useSelector((state) => state.todos);
 
     const [newTodo, setNewTodo] = useState('');
-    const [selectedTodos, setSelectedTodos] = useState([]);
-    const [selectAll, setSelectAll] = useState(false);
+    const [allChecked, setAllChecked] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const todosPerPage = 10;
 
@@ -30,79 +29,43 @@ const TodoApp = () => {
 
     const addNewTodo = () => {
         if (newTodo.trim() !== '') {
-            const newTodoObject = {
-                title: newTodo,
+            dispatch(addTodo({
+                text: newTodo,
                 completed: false,
                 selected: false,
-                local: true,
-                id: Date.now().toString(),
-            };
+            }));
 
-            dispatch(addTodo(newTodoObject));
             setNewTodo('');
         }
     };
 
+    const handleRemoveAll = () => {
+        setAllChecked(false);
+        dispatch(removeSelectedTodo())
+    };
+
     const handleSelectAll = () => {
-        const allTodoIds = todoArray.map((todo) => todo.id);
-
-        if (!selectAll) {
-            setSelectedTodos(allTodoIds);
-        } else {
-            setSelectedTodos([]);
-        }
-
-        setSelectAll((prev) => !prev);
-        dispatch(selectAllTodos());
+        setAllChecked(!allChecked);
+        dispatch(selectAll(!allChecked));
     };
-
-    const toggleSelectedTodo = (todo) => {
-        setSelectedTodos((prevSelectedTodos) => {
-            if (prevSelectedTodos.includes(todo.id)) {
-                return prevSelectedTodos.filter((id) => id !== todo.id);
-            } else {
-                return [...prevSelectedTodos, todo.id];
-            }
-        });
-
-        dispatch(selectAllTodos());
-    };
-
-    const handleDeleteSelected = () => {
-
-        const localTodos = selectedTodos.filter((id) => {
-            const todo = todoArray.find((t) => t.id === id);
-            return todo && todo.local;
-        });
-
-        const apiTodos = selectedTodos.filter((id) => !localTodos.includes(id));
-
-        localTodos.forEach((id) => {
-            dispatch(removeTodo(id));
-        });
-
-        if (apiTodos.length > 0) {
-            dispatch(deleteSelectedTodosLocally(apiTodos));
-        }
-
-        setSelectedTodos([]);
-        dispatch(selectAllTodos());
-    };
-
-    const indexOfLastTodo = currentPage * todosPerPage;
-    const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
-    const currentTodos = todoArray.slice(indexOfFirstTodo, indexOfLastTodo);
-
-    const totalPages = Math.ceil(todoArray.length / todosPerPage);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
+    const indexOfLastTodo = currentPage * todosPerPage;
+    const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
+    const currentTodos = todoArray.slice(indexOfFirstTodo, indexOfLastTodo);
+    const totalPages = Math.ceil(todoArray.length / todosPerPage);
+
     return (
         <div>
             <h1>Todo List</h1>
-            <input type="checkbox" checked={selectAll} onChange={handleSelectAll}/>
+            <input
+                type="checkbox"
+                checked={allChecked}
+                onChange={handleSelectAll}
+            />
             <input
                 type="text"
                 value={newTodo}
@@ -110,7 +73,7 @@ const TodoApp = () => {
                 placeholder="Enter a new todo"
             />
             <button onClick={addNewTodo}>Add Todo</button>
-            <button onClick={handleDeleteSelected}>Delete Selected</button>
+            <button onClick={handleRemoveAll}>Delete Selected</button>
 
             {loading && <h3>Loading....</h3>}
             {error && <h3>{error}</h3>}
@@ -128,14 +91,12 @@ const TodoApp = () => {
                     <Todo
                         key={todo.id}
                         todo={todo}
-                        isSelected={selectedTodos.includes(todo.id)}
-                        toggleSelected={() => toggleSelectedTodo(todo)}
                     />
                 ))}
             </ul>
 
-            <div className='page_numbers' style={{marginTop: '5px'}}>
-                {Array.from({length: totalPages}, (_, index) => (
+            <div className='page_numbers' style={{ marginTop: '5px' }}>
+                {Array.from({ length: totalPages }, (_, index) => (
                     <button key={index + 1} onClick={() => handlePageChange(index + 1)}>
                         {index + 1}
                     </button>
@@ -146,4 +107,6 @@ const TodoApp = () => {
 };
 
 export default TodoApp;
+
+
 

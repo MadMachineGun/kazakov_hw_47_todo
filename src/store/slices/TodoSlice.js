@@ -1,4 +1,4 @@
-// src/components/store/slices/todoSlice.js
+// src/components/store/slices/TodoSlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -13,43 +13,17 @@ export const fetchTodos = createAsyncThunk(
                 return rejectWithValue('Something went wrong....');
             }
 
-            const todosWithStatusFalse = data.map((todo) => ({
+            return data.map((todo) => ({
                 ...todo,
                 completed: false,
                 selected: false,
             }));
 
-            dispatch(toggleSelectAll(todosWithStatusFalse));
-
-            return todosWithStatusFalse;
         } catch (error) {
             return rejectWithValue(error.message);
         }
     }
 );
-export const selectAllTodos = createAsyncThunk(
-    'todos/selectAllTodos',
-    (_, { getState, dispatch }) => {
-        const { todos } = getState();
-        const allCompleted = todos.todoArray.every((todo) => todo.completed);
-
-        const updatedTodos = todos.todoArray.map((todo) => ({
-            ...todo,
-            completed: !allCompleted,
-            selected: !allCompleted && todo.selected,
-        }));
-
-        dispatch(toggleSelectAll(updatedTodos));
-    }
-);
-
-export const deleteSelectedTodosLocally = (selectedIds) => (dispatch, getState) => {
-    const { todos } = getState();
-
-    const updatedTodos = todos.todoArray.filter((todo) => !selectedIds.includes(todo.id));
-
-    dispatch(toggleSelectAll(updatedTodos));
-};
 
 const todoSlice = createSlice({
     name: 'todos',
@@ -60,14 +34,28 @@ const todoSlice = createSlice({
     },
     reducers: {
         addTodo: (state, action) => {
-            state.todoArray.unshift({ ...action.payload, selected: false });
+            state.todoArray.push({ ...action.payload, selected: false, completed: false, id: Math.random() });
         },
         removeTodo: (state, action) => {
             state.todoArray = state.todoArray.filter((todo) => todo.id !== action.payload);
         },
-        // Removed toggleTodo from here
-        toggleSelectAll: (state, action) => {
-            state.todoArray = action.payload;
+        removeSelectedTodo: (state, action) => {
+            state.todoArray = state.todoArray.filter((todo) => !todo.selected);
+        },
+        toggleTodo(state, action) {
+            state.todoArray = state.todoArray.map((todo) =>
+                todo.id === action.payload ? { ...todo, completed: !todo.completed } : todo
+            );
+        },
+        selectTodo: (state, action) => {
+            state.todoArray = state.todoArray.map((todo) =>
+                todo.id === action.payload ? { ...todo, selected: !todo.selected } : todo
+            );
+        },
+        selectAll: (state, action) => {
+            state.todoArray = state.todoArray.map((todo) => {
+                return { ...todo, selected: action.payload };
+            });
         },
     },
     extraReducers: {
@@ -85,6 +73,13 @@ const todoSlice = createSlice({
     },
 });
 
-export const { addTodo, removeTodo, toggleSelectAll } = todoSlice.actions;
+export const {
+    addTodo,
+    removeTodo,
+    removeSelectedTodo,
+    toggleTodo,
+    selectTodo,
+    selectAll,
+} = todoSlice.actions;
 
 export default todoSlice.reducer;

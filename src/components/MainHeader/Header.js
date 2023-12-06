@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { changeName } from '../../store/slices/userSlice';
+import { changeName } from '../../store/slices/UserSlice';
 import './main-header.scss';
 
 export default function Header() {
