@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 
-import { changeName } from '../../store/slices/UserSlice';
+import {changeName} from '../../store/slices/UserSlice';
 import './main-header.scss';
 
 export default function Header() {
@@ -40,9 +40,9 @@ export default function Header() {
                         </button>
                     </div>
                 ) : (
-                    <span>
-            Hello, {userName}! You have <span className="todo-nmbr">{todoNumber}</span> todos to complete!
-          </span>
+                    <span style={{paddingTop: '5px'}}>
+  Hello, {userName}! You have <span className="todo-nmbr">{todoNumber}</span> todos to complete!
+</span>
                 )}
 
                 <button
